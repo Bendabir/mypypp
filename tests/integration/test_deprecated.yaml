@@ -1,0 +1,209 @@
+- case: function
+  main: |
+    from __future__ import annotations
+
+    from typing_extensions import deprecated
+
+
+    @deprecated("This function shouldn't be used.")
+    def function() -> None: ...
+
+
+    function()
+  out: |
+    main:10: error: The function "function" is deprecated : This function shouldn't be used.  [deprecated]
+- case: imported_function
+  main: |
+    from __future__ import annotations
+
+    from lib import function
+
+
+    function()
+  files:
+    - path: lib.py
+      content: |
+        from __future__ import annotations
+
+        from typing_extensions import deprecated
+
+
+        @deprecated("This function shouldn't be used.")
+        def function() -> None: ...
+  out: |
+    main:6: error: The function "function" is deprecated : This function shouldn't be used.  [deprecated]
+- case: class
+  main: |
+    from __future__ import annotations
+
+    from typing import final
+
+    from typing_extensions import deprecated
+
+
+    @final
+    @deprecated("This class shouldn't be used.")
+    class Class: ...
+
+
+    _ = Class()
+  out: |
+    main:13: error: The class "Class" is deprecated : This class shouldn't be used.  [deprecated]
+- case: imported_class
+  main: |
+    from __future__ import annotations
+
+    from lib import Class
+
+
+    _ = Class()
+  files:
+    - path: lib.py
+      content: |
+        from __future__ import annotations
+
+        from typing import final
+
+        from typing_extensions import deprecated
+
+
+        @final
+        @deprecated("This class shouldn't be used.")
+        class Class: ...
+  out: |
+    main:6: error: The class "Class" is deprecated : This class shouldn't be used.  [deprecated]
+- case: instance_method
+  main: |
+    from __future__ import annotations
+
+    from typing import final
+
+    from typing_extensions import deprecated
+
+
+    @final
+    class Test:
+      @deprecated("This method shouldn't be used.")
+      def instance_method(self) -> None: ...
+
+    Test().instance_method()
+  out: |
+    main:13: error: The method "Test.instance_method" is deprecated : This method shouldn't be used.  [deprecated]
+- case: imported_instance_method
+  main: |
+    from __future__ import annotations
+
+    from lib import Test
+
+
+    Test().instance_method()
+  files:
+    - path: lib.py
+      content: |
+        from __future__ import annotations
+
+        from typing import final
+
+        from typing_extensions import deprecated
+
+
+        @final
+        class Test:
+          @deprecated("This method shouldn't be used.")
+          def instance_method(self) -> None: ...
+  out: |
+    main:6: error: The method "Test.instance_method" is deprecated : This method shouldn't be used.  [deprecated]
+- case: class_method
+  main: |
+    from __future__ import annotations
+
+    from typing import final
+
+    from typing_extensions import deprecated
+
+
+    @final
+    class Test:
+      @classmethod
+      @deprecated("This method shouldn't be used.")
+      def class_method(cls) -> None: ...
+
+    Test.class_method()
+    Test().class_method()
+  out: |
+    main:14: error: The method "Test.class_method" is deprecated : This method shouldn't be used.  [deprecated]
+    main:15: error: The method "Test.class_method" is deprecated : This method shouldn't be used.  [deprecated]
+- case: imported_class_method
+  main: |
+    from __future__ import annotations
+
+    from lib import Test
+
+
+    Test.class_method()
+    Test().class_method()
+  files:
+    - path: lib.py
+      content: |
+        from __future__ import annotations
+
+        from typing import final
+
+        from typing_extensions import deprecated
+
+
+        @final
+        class Test:
+          @classmethod
+          @deprecated("This method shouldn't be used.")
+          def class_method(cls) -> None: ...
+  out: |
+    main:6: error: The method "Test.class_method" is deprecated : This method shouldn't be used.  [deprecated]
+    main:7: error: The method "Test.class_method" is deprecated : This method shouldn't be used.  [deprecated]
+- case: static_method
+  main: |
+    from __future__ import annotations
+
+    from typing import final
+
+    from typing_extensions import deprecated
+
+
+    @final
+    class Test:
+      @staticmethod
+      @deprecated("This method shouldn't be used.")
+      def static_method() -> None: ...
+
+    Test.static_method()
+    Test().static_method()
+  out: |
+    main:14: error: The method "Test.static_method" is deprecated : This method shouldn't be used.  [deprecated]
+    main:15: error: The method "Test.static_method" is deprecated : This method shouldn't be used.  [deprecated]
+- case: imported_static_method
+  main: |
+    from __future__ import annotations
+
+    from lib import Test
+
+
+    Test.static_method()
+    Test().static_method()
+  files:
+    - path: lib.py
+      content: |
+        from __future__ import annotations
+
+        from typing import final
+
+        from typing_extensions import deprecated
+
+
+        @final
+        class Test:
+          @staticmethod
+          @deprecated("This method shouldn't be used.")
+          def static_method() -> None: ...
+  out: |
+    main:6: error: The method "Test.static_method" is deprecated : This method shouldn't be used.  [deprecated]
+    main:7: error: The method "Test.static_method" is deprecated : This method shouldn't be used.  [deprecated]

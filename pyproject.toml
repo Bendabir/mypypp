@@ -24,6 +24,7 @@ ruff = "^0.3.2"
 pytest = "^7.4.2"
 pytest-cov = "^4.1.0"
 pytest-randomly = "^3.15.0"
+pytest-mypy-plugins = "^3.1.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -191,7 +192,11 @@ author = "Bendabir"
 
 # --- pytest ---
 [tool.pytest.ini_options]
-addopts = ["--strict-markers", "--import-mode=importlib"]
+addopts = [
+    "--strict-markers",
+    "--import-mode=importlib",
+    "--mypy-ini-file=tests/mypy.ini",
+]
 filterwarnings = ["ignore::DeprecationWarning"]
 minversion = "7.4"
 testpaths = ["tests/unit"]
