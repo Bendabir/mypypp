@@ -1,10 +1,15 @@
 # --- poetry ---
 [tool.poetry]
 name = "mypypp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Collection of experimental plugins for MyPy."
+license = "GPL-3.0-or-later"
 authors = ["Bendabir"]
 readme = "README.md"
+homepage = "https://github.com/bendabir/mypypp"
+repository = "https://github.com/bendabir/mypypp"
+documentation = "https://github.com/Bendabir/mypypp/README.md"
+keywords = ["mypy", "mypy-plugin"]
 packages = [{ include = "mypypp", from = "src" }]
 
 [tool.poetry.dependencies]

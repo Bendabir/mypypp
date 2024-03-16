@@ -17,6 +17,7 @@ jobs:
     name: Publish (${{ inputs.os }}, python${{ inputs.python-version }})
     environment:
       name: release
+      url: https://pypi.org/project/mypypp
     steps:
       - name: Synchronize repository
         uses: actions/checkout@v4
