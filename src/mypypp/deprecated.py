@@ -98,6 +98,19 @@ class DeprecatedPlugin(Plugin):
 
         return context.default_return_type
 
+    @classmethod
+    def _no_deprecated_class(cls, context: FunctionContext, *, reason: str) -> Type:
+        if isinstance(context.context, CallExpr):
+            name = cls._resolve_callexpr_name(context.context)
+
+            context.api.fail(
+                f"The class '{name}' is deprecated : {reason}",
+                context.context,
+                code=DEPRECATED,
+            )
+
+        return context.default_return_type
+
     @override
     def get_function_hook(
         self,
@@ -114,6 +127,14 @@ class DeprecatedPlugin(Plugin):
                     return ft.partial(
                         self._no_deprecated_function,
                         reason=self._resolve_deprecated_reason(d) or "Unknown reason",
+                    )
+
+        if isinstance(sym.node, TypeInfo):
+            for info in sym.node.mro:
+                if "deprecated" in info.metadata:
+                    return ft.partial(
+                        self._no_deprecated_class,
+                        reason=info.metadata["deprecated"]["reason"],
                     )
 
         return None
@@ -147,10 +168,6 @@ class DeprecatedPlugin(Plugin):
                     )
 
         return None
-
-    @staticmethod
-    def _add_deprecated_info(info: TypeInfo, reason: str) -> None:
-        info.metadata["deprecated"] = {"reason": reason}
 
     @classmethod
     def _mark_deprecated_class(cls, context: ClassDefContext) -> None:
