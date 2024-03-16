@@ -6,8 +6,8 @@ import functools as ft
 from typing import TYPE_CHECKING, Callable, final
 
 from mypy.nodes import CallExpr, Decorator, Expression, MemberExpr, NameExpr, StrExpr
-from mypy.plugin import MethodContext, Plugin
-from mypy.types import DEPRECATED_TYPE_NAMES
+from mypy.plugin import FunctionContext, MethodContext, Plugin
+from mypy.types import DEPRECATED_TYPE_NAMES, Type
 from typing_extensions import TypeGuard, override
 
 from mypypp.errorcodes import DEPRECATED
@@ -69,6 +69,39 @@ class DeprecatedPlugin(Plugin):
                 root = ""
 
             return f"{root}.{call_expr.callee.name}".strip(".")
+
+        return None
+
+    @classmethod
+    def _no_deprecated_function(cls, context: FunctionContext, *, reason: str) -> Type:
+        if isinstance(context.context, CallExpr):
+            name = cls._resolve_callexpr_name(context.context)
+
+            context.api.fail(
+                f"The function '{name}' is deprecated : {reason}",
+                context.context,
+                code=DEPRECATED,
+            )
+
+        return context.default_return_type
+
+    @override
+    def get_function_hook(
+        self,
+        fullname: str,
+    ) -> Callable[[FunctionContext], Type] | None:
+        sym = self.lookup_fully_qualified(fullname)
+
+        if sym is None:
+            return None
+
+        if isinstance(sym.node, Decorator):
+            for d in sym.node.decorators:
+                if self._is_deprecated(d):
+                    return ft.partial(
+                        self._no_deprecated_function,
+                        reason=self._resolve_deprecated_reason(d) or "Unknown reason",
+                    )
 
         return None
 
