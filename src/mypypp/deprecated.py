@@ -5,8 +5,21 @@ from __future__ import annotations
 import functools as ft
 from typing import TYPE_CHECKING, Callable, final
 
-from mypy.nodes import CallExpr, Decorator, Expression, MemberExpr, NameExpr, StrExpr
-from mypy.plugin import FunctionContext, MethodContext, Plugin
+from mypy.nodes import (
+    CallExpr,
+    Decorator,
+    Expression,
+    MemberExpr,
+    NameExpr,
+    StrExpr,
+    TypeInfo,
+)
+from mypy.plugin import (
+    ClassDefContext,
+    FunctionContext,
+    MethodContext,
+    Plugin,
+)
 from mypy.types import DEPRECATED_TYPE_NAMES, Type
 from typing_extensions import TypeGuard, override
 
@@ -132,5 +145,29 @@ class DeprecatedPlugin(Plugin):
                         self._no_deprecated_method,
                         reason=self._resolve_deprecated_reason(d) or "Unknown reason",
                     )
+
+        return None
+
+    @staticmethod
+    def _add_deprecated_info(info: TypeInfo, reason: str) -> None:
+        info.metadata["deprecated"] = {"reason": reason}
+
+    @classmethod
+    def _mark_deprecated_class(cls, context: ClassDefContext) -> None:
+        if cls._is_deprecated(context.reason):
+            context.cls.info.metadata["deprecated"] = {
+                "reason": (
+                    cls._resolve_deprecated_reason(context.reason) or "Unknown reason"
+                )
+            }
+
+    @override
+    def get_class_decorator_hook(
+        self,
+        fullname: str,
+    ) -> Callable[[ClassDefContext], None] | None:
+        # The logic for classes is a bit difference
+        if fullname in DEPRECATED_TYPE_NAMES:
+            return self._mark_deprecated_class
 
         return None
