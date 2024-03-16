@@ -46,6 +46,8 @@ jobs:
     uses: ./.github/workflows/publish.yaml
     needs:
       - build
+    permissions:
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
