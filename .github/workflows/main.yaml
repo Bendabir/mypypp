@@ -6,25 +6,24 @@ on:
   pull_request: {}
 jobs:
   quality:
-    name: Quality (${{ matrix.os }}, python${{ matrix.python-version }})
+    name: Quality (python${{ matrix.python-version }})
     uses: ./.github/workflows/quality.yaml
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-22.04"]
+        python-version: ["3.8"]
     with:
-      os: ${{ matrix.os }}
-      python-version: "3.8"
+      os: "ubuntu-latest"
+      python-version: ${{ matrix.python-version }}
       poetry-version: "1.8.2"
   test:
-    name: Test (${{ matrix.os }}, python${{ matrix.python-version }})
+    name: Test (python${{ matrix.python-version }})
     uses: ./.github/workflows/test.yaml
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-22.04"]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     with:
-      os: ${{ matrix.os }}
+      os: "ubuntu-latest"
       python-version: ${{ matrix.python-version }}
       poetry-version: "1.8.2"
