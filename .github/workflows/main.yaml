@@ -8,6 +8,7 @@ jobs:
   quality:
     name: Quality (python${{ matrix.python-version }})
     uses: ./.github/workflows/quality.yaml
+    if: github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -19,6 +20,7 @@ jobs:
   test:
     name: Test (python${{ matrix.python-version }})
     uses: ./.github/workflows/test.yaml
+    if: github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -30,6 +32,7 @@ jobs:
   build:
     name: Build (python${{ matrix.python-version }})
     uses: ./.github/workflows/build.yaml
+    if: github.event_name != 'pull_request' && !(failure() || cancelled())
     needs:
       - quality
       - test
@@ -44,6 +47,7 @@ jobs:
   publish:
     name: Publish (python${{ matrix.python-version }})
     uses: ./.github/workflows/publish.yaml
+    if: github.event_name != 'pull_request' && !(failure() || cancelled())
     needs:
       - build
     permissions:
