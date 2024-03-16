@@ -1,4 +1,4 @@
-name: Publish
+name: Build
 on:
   workflow_call:
     inputs:
@@ -14,7 +14,7 @@ on:
 jobs:
   quality:
     runs-on: ${{ inputs.os }}
-    name: Publish (${{ inputs.os }}, python${{ inputs.python-version }})
+    name: Build (${{ inputs.os }}, python${{ inputs.python-version }})
     steps:
       - name: Synchronize repository
         uses: actions/checkout@v4
@@ -23,10 +23,10 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           poetry-version: ${{ inputs.poetry-version }}
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
+      - name: Build
+        run: poetry build -f wheel
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: release-dists
           path: dist/
-      - name: Publish library
-        uses: pypa/gh-action-pypi-publish@release/v1

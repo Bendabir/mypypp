@@ -27,3 +27,32 @@ jobs:
       os: "ubuntu-latest"
       python-version: ${{ matrix.python-version }}
       poetry-version: "1.8.2"
+  build:
+    name: Build (python${{ matrix.python-version }})
+    uses: ./.github/workflows/build.yaml
+    needs:
+      - quality
+      - test
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8"]
+    with:
+      os: "ubuntu-latest"
+      python-version: ${{ matrix.python-version }}
+      poetry-version: "1.8.2"
+  publish:
+    name: Publish (python${{ matrix.python-version }})
+    uses: ./.github/workflows/publish.yaml
+    needs:
+      - build
+    permissions:
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8"]
+    with:
+      os: "ubuntu-latest"
+      python-version: ${{ matrix.python-version }}
+      poetry-version: "1.8.2"
