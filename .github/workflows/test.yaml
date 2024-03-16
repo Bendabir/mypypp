@@ -1,4 +1,4 @@
-name: Quality
+name: Test
 on:
   workflow_call:
     inputs:
@@ -14,7 +14,7 @@ on:
 jobs:
   quality:
     runs-on: ${{ inputs.os }}
-    name: Quality (${{ inputs.os }}, python${{ inputs.python-version }})
+    name: Test (${{ inputs.os }}, python${{ inputs.python-version }})
     steps:
       - name: Synchronize repository
         uses: actions/checkout@v4
