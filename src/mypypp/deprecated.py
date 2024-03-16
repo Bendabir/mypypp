@@ -91,7 +91,7 @@ class DeprecatedPlugin(Plugin):
             name = cls._resolve_callexpr_name(context.context)
 
             context.api.fail(
-                f"The function '{name}' is deprecated : {reason}",
+                f'The function "{name}" is deprecated : {reason}',
                 context.context,
                 code=DEPRECATED,
             )
@@ -104,7 +104,7 @@ class DeprecatedPlugin(Plugin):
             name = cls._resolve_callexpr_name(context.context)
 
             context.api.fail(
-                f"The class '{name}' is deprecated : {reason}",
+                f'The class "{name}" is deprecated : {reason}',
                 context.context,
                 code=DEPRECATED,
             )
@@ -145,7 +145,7 @@ class DeprecatedPlugin(Plugin):
             name = cls._resolve_callexpr_name(context.context)
 
             context.api.fail(
-                f"The method '{name}' is deprecated : {reason}",
+                f'The method "{name}" is deprecated : {reason}',
                 context.context,
                 code=DEPRECATED,
             )
