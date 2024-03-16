@@ -4,6 +4,9 @@ on:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
   pull_request: {}
+env:
+  POETRY_VERSION: "1.8.2"
+  OS_VERSION: "ubuntu-latest"
 jobs:
   quality:
     name: Quality (python${{ matrix.python-version }})
@@ -13,9 +16,9 @@ jobs:
       matrix:
         python-version: ["3.8"]
     with:
-      os: "ubuntu-latest"
+      os: ${{ env.OS_VERSION }}
       python-version: ${{ matrix.python-version }}
-      poetry-version: "1.8.2"
+      poetry-version: ${{ env.POETRY_VERSION }}
   test:
     name: Test (python${{ matrix.python-version }})
     uses: ./.github/workflows/test.yaml
@@ -24,6 +27,6 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     with:
-      os: "ubuntu-latest"
+      os: ${{ env.OS_VERSION }}
       python-version: ${{ matrix.python-version }}
-      poetry-version: "1.8.2"
+      poetry-version: ${{ env.POETRY_VERSION }}
