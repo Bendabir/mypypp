@@ -66,7 +66,7 @@ class DeprecatedPlugin(Plugin):
 
     @staticmethod
     def _resolve_nameexpr_name(name_expr: NameExpr) -> str:
-        return name_expr.fullname
+        return name_expr.name
 
     @classmethod
     def _resolve_callexpr_name(cls, call_expr: CallExpr) -> str | None:
