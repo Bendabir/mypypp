@@ -1,0 +1,30 @@
+name: CI/CD
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+  pull_request: {}
+jobs:
+  quality:
+    name: Quality (${{ matrix.os }}, python${{ matrix.python-version }})
+    uses: ./.github/workflows/quality.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-22.04"]
+    with:
+      os: ${{ matrix.os }}
+      python-version: "3.8"
+      poetry-version: "1.8.2"
+  test:
+    name: Test (${{ matrix.os }}, python${{ matrix.python-version }})
+    uses: ./.github/workflows/test.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-22.04"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    with:
+      os: ${{ matrix.os }}
+      python-version: ${{ matrix.python-version }}
+      poetry-version: "1.8.2"
