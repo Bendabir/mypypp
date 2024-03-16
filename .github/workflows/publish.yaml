@@ -15,6 +15,10 @@ jobs:
   quality:
     runs-on: ${{ inputs.os }}
     name: Publish (${{ inputs.os }}, python${{ inputs.python-version }})
+    permissions:
+      id-token: write
+    environment:
+      name: release
     steps:
       - name: Synchronize repository
         uses: actions/checkout@v4
